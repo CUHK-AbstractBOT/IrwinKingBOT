@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Panel Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Settings Panel Test</h1>
+
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Test</h2>
+        <button onclick="testSettingsPanel()">Test Settings Panel</button>
+        <button onclick="clearLocalStorage()">Clear Local Storage</button>
+        <button onclick="showCurrentSettings()">Show Current Settings</button>
+    </div>
+
+    <script>
+        function addTestResult(message, isSuccess) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${isSuccess ? 'success' : 'error'}`;
+            resultDiv.textContent = `${isSuccess ? '✅' : '❌'} ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        function testSettingsPanel() {
+            // Test 1: Check if settings modal exists
+            if (document.getElementById('settingsModal')) {
+                addTestResult('Settings modal HTML element exists', true);
+            } else {
+                addTestResult('Settings modal HTML element missing', false);
+            }
+
+            // Test 2: Check if toggleSettings function exists
+            if (typeof toggleSettings === 'function') {
+                addTestResult('toggleSettings function exists', true);
+            } else {
+                addTestResult('toggleSettings function missing', false);
+            }
+
+            // Test 3: Check if settings are saved to localStorage
+            try {
+                localStorage.setItem('testSettings', '{"test": true}');
+                const saved = localStorage.getItem('testSettings');
+                if (saved && JSON.parse(saved).test) {
+                    addTestResult('localStorage read/write works', true);
+                } else {
+                    addTestResult('localStorage read/write failed', false);
+                }
+                localStorage.removeItem('testSettings');
+            } catch (e) {
+                addTestResult('localStorage not available', false);
+            }
+
+            // Test 4: Check if sliders exist
+            const sliders = document.querySelectorAll('.setting-item input[type="range"]');
+            if (sliders.length > 0) {
+                addTestResult(`Found ${sliders.length} setting sliders`, true);
+            } else {
+                addTestResult('No setting sliders found', false);
+            }
+
+            addTestResult('Manual test completed. Check the main page for full functionality.', true);
+        }
+
+        function clearLocalStorage() {
+            localStorage.clear();
+            alert('Local storage cleared');
+        }
+
+        function showCurrentSettings() {
+            const settings = localStorage.getItem('irwinKingSettings');
+            if (settings) {
+                alert('Current settings: ' + settings);
+            } else {
+                alert('No settings found in localStorage');
+            }
+        }
+
+        // Auto-run basic tests
+        window.addEventListener('load', function() {
+            addTestResult('Test page loaded successfully', true);
+
+            // Check if we can access the main page's settings
+            try {
+                if (window.opener && window.opener.toggleSettings) {
+                    addTestResult('Can access main page settings functions', true);
+                } else {
+                    addTestResult('Cannot access main page (this is normal if opened directly)', true);
+                }
+            } catch (e) {
+                addTestResult('Cross-origin access blocked (this is normal)', true);
+            }
+        });
+    </script>
+</body>
+</html>

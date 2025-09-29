@@ -3,25 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Irwin King Bot</title>
+    <title>Irwin King Bot - 超级特效版</title>
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="effects.css">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
-            overflow: hidden; /* 移除滚动条 */
+            overflow: hidden;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
             height: 100vh;
             width: 100vw;
             display: flex;
             flex-direction: column;
+            transition: all 0.5s ease;
         }
+
+        /* 默认主题样式 */
+        body.default {
+            background-color: #f0f0f0;
+        }
+
+        body.default #bg1 {
+            filter: none;
+        }
+
+        body.default #bg2 {
+            filter: none;
+        }
+
+        /* 主题切换按钮 */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        }
+
+        .theme-btn.default {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .theme-btn.cyberpunk {
+            background: linear-gradient(45deg, #ff006e 0%, #8338ec 100%);
+        }
+
+        .theme-btn.magic {
+            background: linear-gradient(45deg, #ffd700 0%, #ff6b6b 100%);
+        }
+
+        .theme-btn.disco {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+        }
+
         
+        /* 简化的背景样式 - 主要背景由effects.js处理 */
+        body {
+            transition: all 0.5s ease;
+        }
+
+        body.default {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body.cyberpunk {
+            background: #000;
+        }
+
+        body.magic {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        body.disco {
+            background: #000;
+        }
+
         #bg1 {
             width: 100%;
             max-width: 800px;
@@ -85,41 +169,467 @@
             overflow: hidden; /* 确保内容不会溢出 */
         }
         
-        #bg2 {
+        /* 统一的Irwin人物样式 */
+        .irwin-character {
             position: absolute;
             width: clamp(80px, 15vw, 150px);
             height: auto;
             transition: all 0.1s linear;
             z-index: 2;
+            cursor: pointer;
+        }
+
+        /* 主要Irwin保持原始大小 */
+        .irwin-main {
+            z-index: 3; /* 主要Irwin在最顶层 */
+        }
+
+        /* 独立的颜色滤镜 */
+        .irwin-red {
+            filter: hue-rotate(0deg) saturate(1.5) drop-shadow(0 0 10px #ff4444);
+        }
+
+        .irwin-blue {
+            filter: hue-rotate(200deg) saturate(1.5) drop-shadow(0 0 10px #4444ff);
+        }
+
+        .irwin-green {
+            filter: hue-rotate(120deg) saturate(1.5) drop-shadow(0 0 10px #44ff44);
+        }
+
+        /* 主题相关的所有Irwin人物效果 */
+        body.cyberpunk .irwin-character {
+            animation: cyberpunkHolographicFloat 3s ease-in-out infinite;
+        }
+
+        body.cyberpunk .irwin-main {
+            filter: hue-rotate(180deg) saturate(2) drop-shadow(0 0 15px #ff006e) !important;
+        }
+
+        body.cyberpunk .irwin-red {
+            filter: hue-rotate(320deg) saturate(2) drop-shadow(0 0 15px #ff0066) !important;
+            animation: cyberpunkRedGlow 2s ease-in-out infinite, cyberpunkHolographicFloat 3s ease-in-out infinite;
+        }
+
+        body.cyberpunk .irwin-blue {
+            filter: hue-rotate(180deg) saturate(2) drop-shadow(0 0 15px #00ffff) !important;
+            animation: cyberpunkBlueGlow 2s ease-in-out infinite, cyberpunkHolographicFloat 3s ease-in-out infinite;
+        }
+
+        body.cyberpunk .irwin-green {
+            filter: hue-rotate(80deg) saturate(2) drop-shadow(0 0 15px #00ff88) !important;
+            animation: cyberpunkGreenGlow 2s ease-in-out infinite, cyberpunkHolographicFloat 3s ease-in-out infinite;
+        }
+
+        body.magic .irwin-character {
+            animation: magicCircleFloat 4s linear infinite;
+        }
+
+        body.magic .irwin-main {
+            filter: hue-rotate(45deg) brightness(1.2) drop-shadow(0 0 15px #ffd700) !important;
+        }
+
+        body.magic .irwin-red {
+            filter: hue-rotate(30deg) saturate(1.8) drop-shadow(0 0 20px #ff6b35) !important;
+            animation: magicRedSparkle 3s ease-in-out infinite, magicCircleFloat 4s linear infinite;
+        }
+
+        body.magic .irwin-blue {
+            filter: hue-rotate(220deg) saturate(1.8) drop-shadow(0 0 20px #4facfe) !important;
+            animation: magicBlueSparkle 3s ease-in-out infinite, magicCircleFloat 4s linear infinite;
+        }
+
+        body.magic .irwin-green {
+            filter: hue-rotate(100deg) saturate(1.8) drop-shadow(0 0 20px #43e97b) !important;
+            animation: magicGreenSparkle 3s ease-in-out infinite, magicCircleFloat 4s linear infinite;
+        }
+
+        body.disco .irwin-character {
+            animation: discoMove 0.8s infinite;
+        }
+
+        body.disco .irwin-main {
+            filter: hue-rotate(90deg) saturate(1.5) drop-shadow(0 0 20px #f093fb) !important;
+        }
+
+        body.disco .irwin-red {
+            filter: hue-rotate(0deg) saturate(3) drop-shadow(0 0 25px #ff0080) !important;
+            animation: discoRedSpin 1s linear infinite, discoMove 0.8s infinite;
+        }
+
+        body.disco .irwin-blue {
+            filter: hue-rotate(240deg) saturate(3) drop-shadow(0 0 25px #8000ff) !important;
+            animation: discoBlueSpin 1.2s linear infinite, discoMove 0.8s infinite;
+        }
+
+        body.disco .irwin-green {
+            filter: hue-rotate(120deg) saturate(3) drop-shadow(0 0 25px #00ff80) !important;
+            animation: discoGreenSpin 0.8s linear infinite, discoMove 0.8s infinite;
+        }
+
+        /* 动画效果 */
+        @keyframes cyberpunkHolographicFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes magicCircleFloat {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes cyberpunkRedGlow {
+            0%, 100% { filter: hue-rotate(320deg) saturate(2) drop-shadow(0 0 15px #ff0066); }
+            50% { filter: hue-rotate(340deg) saturate(3) drop-shadow(0 0 25px #ff3366); }
+        }
+
+        @keyframes cyberpunkBlueGlow {
+            0%, 100% { filter: hue-rotate(180deg) saturate(2) drop-shadow(0 0 15px #00ffff); }
+            50% { filter: hue-rotate(200deg) saturate(3) drop-shadow(0 0 25px #00ccff); }
+        }
+
+        @keyframes cyberpunkGreenGlow {
+            0%, 100% { filter: hue-rotate(80deg) saturate(2) drop-shadow(0 0 15px #00ff88); }
+            50% { filter: hue-rotate(100deg) saturate(3) drop-shadow(0 0 25px #00ffaa); }
+        }
+
+        @keyframes magicRedSparkle {
+            0%, 100% { filter: hue-rotate(30deg) saturate(1.8) drop-shadow(0 0 20px #ff6b35); }
+            50% { filter: hue-rotate(50deg) saturate(2.5) drop-shadow(0 0 30px #ff8855); }
+        }
+
+        @keyframes magicBlueSparkle {
+            0%, 100% { filter: hue-rotate(220deg) saturate(1.8) drop-shadow(0 0 20px #4facfe); }
+            50% { filter: hue-rotate(240deg) saturate(2.5) drop-shadow(0 0 30px #66b3ff); }
+        }
+
+        @keyframes magicGreenSparkle {
+            0%, 100% { filter: hue-rotate(100deg) saturate(1.8) drop-shadow(0 0 20px #43e97b); }
+            50% { filter: hue-rotate(120deg) saturate(2.5) drop-shadow(0 0 30px #66ff99); }
+        }
+
+        @keyframes discoRedSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes discoBlueSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(-360deg) scale(1); }
+        }
+
+        @keyframes discoGreenSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(360deg) scale(1.1); }
         }
         
         #response {
             position: absolute;
             background-color: white;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            padding: 15px 20px;
+            border: 3px solid #ccc;
+            border-radius: 15px;
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
             color: #333;
             z-index: 3;
-            max-width: min(40vw, 250px);
+            max-width: min(60vw, 400px);
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: responsePulse 2s ease-in-out infinite;
+            display: none;
+        }
+
+        #response.show {
+            display: block;
+        }
+
+        /* 默认主题响应框 */
+        body.default #response {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-color: #667eea;
+            color: #333 !important;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            animation: responsePulse 2s ease-in-out infinite;
+        }
+
+        /* 赛博朋克响应框 */
+        body.cyberpunk #response {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(255,0,110,0.1) 100%);
+            border-color: #00ffff;
+            color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            text-shadow: 0 0 10px #00ffff;
+            animation: cyberpunkResponse 1s ease-in-out infinite;
+        }
+
+        /* 魔法主题响应框 */
+        body.magic #response {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(102,126,234,0.2) 100%);
+            border-color: #ffd700;
+            color: #ffd700;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 0 15px #ffd700;
+            animation: magicResponse 2s ease-in-out infinite;
+        }
+
+        /* 迪斯科主题响应框 */
+        body.disco #response {
+            background: linear-gradient(135deg, rgba(240,147,251,0.3) 0%, rgba(245,87,108,0.3) 100%);
+            border-color: #f093fb;
+            color: #fff;
+            box-shadow: 0 0 50px rgba(240, 147, 251, 0.8);
+            text-shadow: 0 0 20px #f093fb;
+            animation: discoResponse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes responsePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes cyberpunkResponse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+                border-color: #00ffff;
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(255, 0, 110, 0.8);
+                border-color: #ff006e;
+            }
+        }
+
+        @keyframes magicResponse {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(255, 215, 0, 0.9);
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes discoResponse {
+            0% {
+                box-shadow: 0 0 50px rgba(240, 147, 251, 0.8);
+                border-color: #f093fb;
+            }
+            25% {
+                box-shadow: 0 0 50px rgba(245, 87, 108, 0.8);
+                border-color: #f5576c;
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(79, 172, 254, 0.8);
+                border-color: #4facfe;
+            }
+            75% {
+                box-shadow: 0 0 50px rgba(0, 242, 254, 0.8);
+                border-color: #00f2fe;
+            }
+            100% {
+                box-shadow: 0 0 50px rgba(240, 147, 251, 0.8);
+                border-color: #f093fb;
+            }
         }
         
+        /* 赛博朋克主题 */
+        body.cyberpunk {
+            background: #000;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+
+        body.cyberpunk .dialog-box h1 {
+            color: #ff006e;
+            text-shadow: 0 0 10px #ff006e, 0 0 20px #ff006e, 0 0 30px #ff006e;
+            animation: glitch 2s infinite;
+        }
+
+        body.cyberpunk #userInput {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        body.cyberpunk button {
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
+            animation: neonPulse 1.5s infinite alternate;
+        }
+
+        
+        body.cyberpunk #bg2 {
+            filter: hue-rotate(180deg) saturate(2) drop-shadow(0 0 10px #ff006e);
+            animation: holographicFloat 3s ease-in-out infinite;
+        }
+
+        /* 魔法主题 */
+        body.magic {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            font-family: 'Georgia', serif;
+        }
+
+        body.magic .dialog-box h1 {
+            color: #ffd700;
+            text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
+            animation: magicGlow 2s ease-in-out infinite alternate;
+        }
+
+        body.magic #userInput {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            color: #fff;
+            border-radius: 25px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        body.magic button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 25px;
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.6);
+            animation: magicSparkle 2s infinite;
+        }
+
+        
+        body.magic #bg2 {
+            filter: hue-rotate(45deg) brightness(1.2) drop-shadow(0 0 15px #ffd700);
+            animation: magicCircle 4s linear infinite;
+        }
+
+        /* 迪斯科主题 */
+        body.disco {
+            background: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            animation: discoFloor 0.5s infinite;
+        }
+
+        body.disco .dialog-box h1 {
+            color: #f093fb;
+            text-shadow: 0 0 30px #f093fb, 0 0 60px #f5576c;
+            animation: discoText 1s infinite;
+        }
+
+        body.disco #userInput {
+            background: rgba(240, 147, 251, 0.2);
+            border: 2px solid #f093fb;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(240, 147, 251, 0.4);
+        }
+
+        body.disco button {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            animation: discoButton 0.3s infinite alternate;
+            box-shadow: 0 0 30px rgba(240, 147, 251, 0.8);
+        }
+
+        
+        body.disco #bg2 {
+            filter: hue-rotate(90deg) saturate(1.5) drop-shadow(0 0 20px #f093fb);
+            animation: discoMove 0.8s infinite;
+        }
+
+        /* 动画关键帧 */
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes neonPulse {
+            0% { box-shadow: 0 0 20px rgba(255, 0, 110, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(255, 0, 110, 0.8); }
+        }
+
+        @keyframes holographicFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes magicGlow {
+            0% { text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700; }
+            100% { text-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700; }
+        }
+
+        @keyframes magicSparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes magicCircle {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes discoFloor {
+            0% { background: #000; }
+            25% { background: #1a0033; }
+            50% { background: #330066; }
+            75% { background: #1a0033; }
+            100% { background: #000; }
+        }
+
+        @keyframes discoText {
+            0% { color: #f093fb; }
+            25% { color: #f5576c; }
+            50% { color: #4facfe; }
+            75% { color: #00f2fe; }
+            100% { color: #f093fb; }
+        }
+
+        @keyframes discoButton {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        @keyframes discoMove {
+            0%, 100% { transform: translateX(0px) rotate(0deg); }
+            25% { transform: translateX(5px) rotate(5deg); }
+            50% { transform: translateX(0px) rotate(0deg); }
+            75% { transform: translateX(-5px) rotate(-5deg); }
+        }
+
         @media (max-width: 768px) {
             .input-group {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             #userInput {
                 width: 80vw;
             }
+
+            .theme-switcher {
+                top: 10px;
+                right: 10px;
+            }
+
+            .theme-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 10px;
+            }
         }
+
     </style>
 </head>
-<body>
+<body class="default">
+    <!-- 主题切换器 -->
+    <div class="theme-switcher">
+        <div class="theme-btn default" onclick="switchTheme('default')" title="默认主题">🎓</div>
+        <div class="theme-btn cyberpunk" onclick="switchTheme('cyberpunk')" title="赛博朋克">🤖</div>
+        <div class="theme-btn magic" onclick="switchTheme('magic')" title="魔法主题">✨</div>
+        <div class="theme-btn disco" onclick="switchTheme('disco')" title="迪斯科主题">🎵</div>
+    </div>
+
     <div>
         <img id="bg1" src="bg1.png" alt="Top Background Image">
     </div>
@@ -131,101 +641,378 @@
         </div>
     </div>
     <div class="floating-container">
+        <!-- 四个Irwin人物，都使用相同的机制 -->
         <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
-            <img id="bg2" src="bg2.png" alt="Floating Image">
+            <img class="irwin-character irwin-main" src="bg2.png" alt="Irwin King Main">
         </a>
+        <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
+            <img class="irwin-character irwin-red" src="bg2.png" alt="Irwin King Red">
+        </a>
+        <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
+            <img class="irwin-character irwin-blue" src="bg2.png" alt="Irwin King Blue">
+        </a>
+        <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
+            <img class="irwin-character irwin-green" src="bg2.png" alt="Irwin King Green">
+        </a>
+
         <div id="response"></div>
     </div>
     <script>
+        // 主题切换功能
+        function switchTheme(theme) {
+            document.body.className = theme;
+            localStorage.setItem('selectedTheme', theme);
+
+            // 添加切换特效
+            createThemeTransitionEffect(theme);
+        }
+
+        // 创建主题切换特效
+        function createThemeTransitionEffect(theme) {
+            const effect = document.createElement('div');
+            effect.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 9999;
+                animation: themeTransition 0.8s ease-out;
+            `;
+
+            if (theme === 'cyberpunk') {
+                effect.style.background = 'radial-gradient(circle, transparent 0%, rgba(255, 0, 110, 0.3) 100%)';
+            } else if (theme === 'magic') {
+                effect.style.background = 'radial-gradient(circle, transparent 0%, rgba(255, 215, 0, 0.3) 100%)';
+            } else if (theme === 'disco') {
+                effect.style.background = 'radial-gradient(circle, transparent 0%, rgba(240, 147, 251, 0.3) 100%)';
+            }
+
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 800);
+        }
+
+        // 加载保存的主题
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('selectedTheme');
+            if (savedTheme) {
+                document.body.className = savedTheme;
+            }
+        });
+
+        // 增强版响应函数
         function thinkResponse() {
             const inputText = document.getElementById('userInput').value;
             const responseDiv = document.getElementById('response');
-            const waitSeconds = Math.random() * 4 + 1; // Random wait time between 1 and 5 seconds
+            const waitSeconds = Math.random() * 4 + 1;
 
-            // Display thinking message
+            // 显示思考消息
             responseDiv.innerHTML = 'Thinking......';
+            responseDiv.classList.add('show');
 
-            // Simulate delay
+            // 根据主题创建特效
+            createThinkingEffect();
+
+            // 模拟延迟
             setTimeout(() => {
                 const response = inputText.toLowerCase().includes('it depends')
                     ? `Thought for ${waitSeconds.toFixed(2)} seconds<br>Depends on what?`
                     : `Thought for ${waitSeconds.toFixed(2)} seconds<br>It depends.`;
+
                 responseDiv.innerHTML = response;
+                createResponseEffect();
             }, waitSeconds * 1000);
         }
 
-        // Continuous floating effect for bg2 image and response
-        const bg2 = document.getElementById('bg2');
+        // 创建思考特效
+        function createThinkingEffect() {
+            const theme = document.body.className;
+
+            if (theme === 'cyberpunk') {
+                createCyberpunkThinkingEffect();
+            } else if (theme === 'magic') {
+                createMagicThinkingEffect();
+            } else if (theme === 'disco') {
+                createDiscoThinkingEffect();
+            }
+        }
+
+        // 创建响应特效
+        function createResponseEffect() {
+            const theme = document.body.className;
+
+            if (theme === 'cyberpunk') {
+                createCyberpunkResponseEffect();
+            } else if (theme === 'magic') {
+                createMagicResponseEffect();
+            } else if (theme === 'disco') {
+                createDiscoResponseEffect();
+            }
+        }
+
+        // 赛博朋克思考特效
+        function createCyberpunkThinkingEffect() {
+            const container = document.querySelector('.floating-container');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `
+                        position: absolute;
+                        width: 2px;
+                        height: 2px;
+                        background: #00ffff;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        pointer-events: none;
+                        animation: cyberpunkParticle 1s linear forwards;
+                    `;
+                    container.appendChild(particle);
+                    setTimeout(() => particle.remove(), 1000);
+                }, i * 100);
+            }
+        }
+
+        // 魔法思考特效
+        function createMagicThinkingEffect() {
+            const container = document.querySelector('.floating-container');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.cssText = `
+                        position: absolute;
+                        width: 4px;
+                        height: 4px;
+                        background: #ffd700;
+                        border-radius: 50%;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        pointer-events: none;
+                        animation: magicSparkleFloat 2s ease-out forwards;
+                    `;
+                    container.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 150);
+            }
+        }
+
+        // 迪斯科思考特效
+        function createDiscoThinkingEffect() {
+            const container = document.querySelector('.floating-container');
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const discoBall = document.createElement('div');
+                    discoBall.style.cssText = `
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        background: linear-gradient(45deg, #f093fb, #f5576c);
+                        border-radius: 50%;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        pointer-events: none;
+                        animation: discoBallSpin 1s linear forwards;
+                    `;
+                    container.appendChild(discoBall);
+                    setTimeout(() => discoBall.remove(), 1000);
+                }, i * 200);
+            }
+        }
+
+        // 赛博朋克响应特效
+        function createCyberpunkResponseEffect() {
+            const bg2 = document.getElementById('bg2');
+            bg2.style.animation = 'none';
+            setTimeout(() => {
+                bg2.style.animation = 'holographicFloat 3s ease-in-out infinite, cyberpunkGlow 0.5s ease-in-out 3';
+            }, 10);
+        }
+
+        // 魔法响应特效
+        function createMagicResponseEffect() {
+            const bg2 = document.getElementById('bg2');
+            bg2.style.animation = 'none';
+            setTimeout(() => {
+                bg2.style.animation = 'magicCircle 4s linear infinite, magicBurst 0.8s ease-in-out 2';
+            }, 10);
+        }
+
+        // 迪斯科响应特效
+        function createDiscoResponseEffect() {
+            const bg2 = document.getElementById('bg2');
+            bg2.style.animation = 'none';
+            setTimeout(() => {
+                bg2.style.animation = 'discoMove 0.8s infinite, discoFlash 0.3s ease-in-out 5';
+            }, 10);
+        }
+
+        // 添加主题切换动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes themeTransition {
+                0% { opacity: 0; transform: scale(0.8); }
+                50% { opacity: 1; transform: scale(1.1); }
+                100% { opacity: 0; transform: scale(1); }
+            }
+
+            @keyframes cyberpunkParticle {
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-50px) scale(0); opacity: 0; }
+            }
+
+            @keyframes magicSparkleFloat {
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-30px) scale(0); opacity: 0; }
+            }
+
+            @keyframes discoBallSpin {
+                0% { transform: rotate(0deg) scale(1); opacity: 1; }
+                100% { transform: rotate(360deg) scale(0); opacity: 0; }
+            }
+
+            @keyframes cyberpunkGlow {
+                0%, 100% { filter: hue-rotate(180deg) saturate(2) drop-shadow(0 0 10px #ff006e); }
+                50% { filter: hue-rotate(180deg) saturate(3) drop-shadow(0 0 20px #ff006e); }
+            }
+
+            @keyframes magicBurst {
+                0%, 100% { filter: hue-rotate(45deg) brightness(1.2) drop-shadow(0 0 15px #ffd700); }
+                50% { filter: hue-rotate(45deg) brightness(1.5) drop-shadow(0 0 30px #ffd700); }
+            }
+
+            @keyframes discoFlash {
+                0%, 100% { filter: hue-rotate(90deg) saturate(1.5) drop-shadow(0 0 20px #f093fb); }
+                50% { filter: hue-rotate(90deg) saturate(2) drop-shadow(0 0 40px #f093fb); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Unified floating effect for all Irwin characters
+        const allIrwins = document.querySelectorAll('.irwin-character');
         const responseDiv = document.getElementById('response');
         const container = document.querySelector('.floating-container');
-        
-        // 初始速度和位置
-        let velocityX = (Math.random() - 0.5) * 2; // 减小速度范围
-        let velocityY = (Math.random() - 0.5) * 2;
-        
+        const mainIrwin = document.querySelector('.irwin-main');
+
+        // 所有Irwin的统称数据结构
+        const irwinsData = [];
+
         // 等待图像加载完成
         function initAnimation() {
             const containerRect = container.getBoundingClientRect();
-            const imgWidth = bg2.offsetWidth;
-            const imgHeight = bg2.offsetHeight;
-            
-            // 初始位置 - 确保在容器内
-            let posX = Math.random() * (containerRect.width - imgWidth);
-            let posY = Math.random() * (containerRect.height - imgHeight);
-            
+
+            // 初始化所有Irwin
+            allIrwins.forEach((irwin, index) => {
+                const irwinWidth = irwin.offsetWidth;
+                const irwinHeight = irwin.offsetHeight;
+
+                // 为每个Irwin设置随机的初始速度和位置
+                irwinsData.push({
+                    element: irwin,
+                    x: Math.random() * (containerRect.width - irwinWidth),
+                    y: Math.random() * (containerRect.height - irwinHeight),
+                    velocityX: (Math.random() - 0.5) * 2,
+                    velocityY: (Math.random() - 0.5) * 2,
+                    width: irwinWidth,
+                    height: irwinHeight,
+                    isMain: irwin.classList.contains('irwin-main')
+                });
+            });
+
             function moveImage() {
-                // 更新位置
-                posX += velocityX;
-                posY += velocityY;
-                
                 // 获取当前容器尺寸
                 const currentContainerRect = container.getBoundingClientRect();
-                
-                // 边界检测 - 使用容器边界
-                if (posX <= 0) {
-                    velocityX = Math.abs(velocityX);
-                    posX = 0;
-                } else if (posX >= currentContainerRect.width - imgWidth) {
-                    velocityX = -Math.abs(velocityX);
-                    posX = currentContainerRect.width - imgWidth;
+                let mainIrwinData = null;
+
+                // 更新所有Irwin位置
+                irwinsData.forEach(irwinData => {
+                    irwinData.x += irwinData.velocityX;
+                    irwinData.y += irwinData.velocityY;
+
+                    // 边界检测
+                    if (irwinData.x <= 0) {
+                        irwinData.velocityX = Math.abs(irwinData.velocityX);
+                        irwinData.x = 0;
+                    } else if (irwinData.x >= currentContainerRect.width - irwinData.width) {
+                        irwinData.velocityX = -Math.abs(irwinData.velocityX);
+                        irwinData.x = currentContainerRect.width - irwinData.width;
+                    }
+
+                    if (irwinData.y <= 0) {
+                        irwinData.velocityY = Math.abs(irwinData.velocityY);
+                        irwinData.y = 0;
+                    } else if (irwinData.y >= currentContainerRect.height - irwinData.height) {
+                        irwinData.velocityY = -Math.abs(irwinData.velocityY);
+                        irwinData.y = currentContainerRect.height - irwinData.height;
+                    }
+
+                    // 应用位置
+                    irwinData.element.style.left = `${irwinData.x}px`;
+                    irwinData.element.style.top = `${irwinData.y}px`;
+
+                    // 如果是主要Irwin，记录数据用于响应框定位
+                    if (irwinData.isMain) {
+                        mainIrwinData = irwinData;
+                    }
+                });
+
+                // 定位响应框在主要Irwin下方
+                if (mainIrwinData && responseDiv.classList.contains('show')) {
+                    const responseWidth = responseDiv.offsetWidth;
+                    const responseHeight = responseDiv.offsetHeight;
+
+                    // 确保响应框不超出容器边界
+                    let responseX = mainIrwinData.x;
+                    let responseY = mainIrwinData.y + mainIrwinData.height + 20;
+
+                    // 水平居中对齐
+                    responseX = mainIrwinData.x + (mainIrwinData.width - responseWidth) / 2;
+
+                    // 边界检查
+                    if (responseX < 0) responseX = 0;
+                    if (responseX + responseWidth > currentContainerRect.width) {
+                        responseX = currentContainerRect.width - responseWidth;
+                    }
+                    if (responseY + responseHeight > currentContainerRect.height) {
+                        responseY = mainIrwinData.y - responseHeight - 20;
+                    }
+
+                    responseDiv.style.left = `${responseX}px`;
+                    responseDiv.style.top = `${responseY}px`;
                 }
-                
-                if (posY <= 0) {
-                    velocityY = Math.abs(velocityY);
-                    posY = 0;
-                } else if (posY >= currentContainerRect.height - imgHeight) {
-                    velocityY = -Math.abs(velocityY);
-                    posY = currentContainerRect.height - imgHeight;
-                }
-                
-                // 应用新位置
-                bg2.style.left = `${posX}px`;
-                bg2.style.top = `${posY}px`;
-                
-                // 定位响应框在图像下方
-                responseDiv.style.left = `${posX}px`;
-                responseDiv.style.top = `${posY + imgHeight + 5}px`;
-                
+
                 // 继续动画
                 requestAnimationFrame(moveImage);
             }
-            
+
             // 开始动画
             moveImage();
         }
-        
-        // 如果图像已加载，直接初始化
-        if (bg2.complete) {
-            initAnimation();
-        } else {
-            // 否则等待加载完成
-            bg2.addEventListener('load', initAnimation);
+
+        // 等待所有Irwin图像加载完成
+        let imagesLoaded = 0;
+        const totalImages = allIrwins.length;
+
+        function checkAllImagesLoaded() {
+            imagesLoaded++;
+            if (imagesLoaded === totalImages) {
+                initAnimation();
+            }
         }
+
+        allIrwins.forEach(irwin => {
+            if (irwin.complete) {
+                checkAllImagesLoaded();
+            } else {
+                irwin.addEventListener('load', checkAllImagesLoaded);
+            }
+        });
         
         // 窗口大小变化时重新计算边界
         window.addEventListener('resize', function() {
             // 这里不需要额外处理，因为动画循环中会重新获取容器尺寸
         });
-    </script>
+
+            </script>
+    <script src="effects.js"></script>
 </body>
 </html>
