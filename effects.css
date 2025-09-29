@@ -1,0 +1,505 @@
+/* ========== 复杂背景特效CSS ========== */
+
+/* ========== 赛博朋克主题特效 ========== */
+.cyberpunk-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 赛博朋克网格背景 */
+.cyberpunk-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(255, 0, 110, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 110, 0.3) 1px, transparent 1px),
+        linear-gradient(rgba(0, 255, 255, 0.2) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.2) 2px, transparent 2px);
+    background-size: 50px 50px, 50px 50px, 100px 100px, 100px 100px;
+    animation: gridMove 10s linear infinite;
+}
+
+/* 激光扫描效果 */
+.laser-scan {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        #00ffff 20%,
+        #ffffff 50%,
+        #00ffff 80%,
+        transparent 100%);
+    animation: laserScan 4s linear infinite;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+.laser-scan:nth-child(2) {
+    animation-delay: 1s;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        #ff006e 20%,
+        #ffffff 50%,
+        #ff006e 80%,
+        transparent 100%);
+    box-shadow: 0 0 15px #ff006e;
+}
+
+.laser-scan:nth-child(3) {
+    animation-delay: 2s;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        #ffff00 20%,
+        #ffffff 50%,
+        #ffff00 80%,
+        transparent 100%);
+    box-shadow: 0 0 10px #ffff00;
+}
+
+/* 数据流效果 */
+.data-stream {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        #00ff00 50%,
+        transparent 100%);
+    animation: dataFlow 3s linear infinite;
+}
+
+/* 数字雨效果 */
+.digital-rain {
+    position: absolute;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    animation: digitalRainFall 5s linear infinite;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+/* 全息投影效果 */
+.holographic-glitch {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 255, 0.1) 2px,
+        rgba(0, 255, 255, 0.1) 4px
+    );
+    animation: glitchMove 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* ========== 魔法主题特效 ========== */
+.magic-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 魔法星空背景 */
+.magic-starfield {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+/* 星星粒子 */
+.magic-star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: starTwinkle 3s ease-in-out infinite;
+    box-shadow: 0 0 10px #ffd700;
+}
+
+.magic-star:nth-child(odd) {
+    width: 2px;
+    height: 2px;
+    background: #ffffff;
+    animation-duration: 2s;
+    box-shadow: 0 0 5px #ffffff;
+}
+
+/* 魔法光圈 */
+.magic-circle {
+    position: absolute;
+    border: 3px solid rgba(255, 215, 0, 0.6);
+    border-radius: 50%;
+    animation: magicCircleExpand 4s ease-out infinite;
+    pointer-events: none;
+}
+
+.magic-circle:nth-child(2) {
+    border-color: rgba(138, 43, 226, 0.6);
+    animation-delay: 1s;
+}
+
+.magic-circle:nth-child(3) {
+    border-color: rgba(255, 20, 147, 0.6);
+    animation-delay: 2s;
+}
+
+/* 魔法符文 */
+.magic-rune {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(255, 215, 0, 0.8);
+    border-radius: 50%;
+    animation: runeRotate 6s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #ffd700;
+    text-shadow: 0 0 10px #ffd700;
+}
+
+/* 流星效果 */
+.magic-meteor {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        #ffd700 50%,
+        transparent 100%);
+    animation: meteorFall 3s linear infinite;
+    transform: rotate(45deg);
+}
+
+/* 魔法雾气 */
+.magic-fog {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle,
+        rgba(255, 215, 0, 0.3) 0%,
+        transparent 70%);
+    border-radius: 50%;
+    animation: fogDrift 8s ease-in-out infinite;
+}
+
+/* ========== 迪斯科主题特效 ========== */
+.disco-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 迪斯科球 */
+.disco-ball {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background:
+        radial-gradient(circle at 30% 30%, #ffffff 0%, #f093fb 25%, #f5576c 50%, #4facfe 75%, #00f2fe 100%);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    animation: discoBallRotate 3s linear infinite;
+    box-shadow:
+        0 0 50px rgba(240, 147, 251, 0.8),
+        inset -20px -20px 30px rgba(255, 255, 255, 0.3);
+}
+
+/* 迪斯科球镜面效果 */
+.disco-ball::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 0.8) 0%,
+        transparent 70%);
+    border-radius: 50%;
+}
+
+/* 迪斯科光束 */
+.disco-beam {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    width: 12px;
+    height: 70%;
+    transform-origin: top center;
+    animation: discoBeamRotate 8s linear infinite;
+    background: linear-gradient(to bottom,
+        rgba(255, 255, 255, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(2) {
+    animation-delay: -1s;
+    background: linear-gradient(to bottom,
+        rgba(240, 147, 251, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(3) {
+    animation-delay: -2s;
+    background: linear-gradient(to bottom,
+        rgba(245, 87, 108, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(4) {
+    animation-delay: -3s;
+    background: linear-gradient(to bottom,
+        rgba(79, 172, 254, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(5) {
+    animation-delay: -4s;
+    background: linear-gradient(to bottom,
+        rgba(0, 242, 254, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(6) {
+    animation-delay: -5s;
+    background: linear-gradient(to bottom,
+        rgba(255, 215, 0, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(7) {
+    animation-delay: -6s;
+    background: linear-gradient(to bottom,
+        rgba(255, 0, 110, 0.8) 0%,
+        transparent 100%);
+}
+
+.disco-beam:nth-child(8) {
+    animation-delay: -7s;
+    background: linear-gradient(to bottom,
+        rgba(0, 255, 255, 0.8) 0%,
+        transparent 100%);
+}
+
+/* 地板光斑 */
+.disco-floor-spot {
+    position: absolute;
+    bottom: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    animation: floorSpotPulse 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* 彩色烟雾 */
+.disco-smoke {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    animation: smokeRise 6s ease-out infinite;
+    opacity: 0.6;
+}
+
+/* 脉冲光圈 */
+.disco-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    border: 2px solid rgba(240, 147, 251, 0.8);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: discoPulseExpand 3s ease-out infinite;
+}
+
+/* ========== 动画关键帧 ========== */
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+
+@keyframes laserScan {
+    0% { top: -10px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+@keyframes dataFlow {
+    0% { transform: translateY(-100px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+
+@keyframes digitalRainFall {
+    0% { transform: translateY(-100px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes glitchMove {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+}
+
+@keyframes magicCircleExpand {
+    0% {
+        width: 50px;
+        height: 50px;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        width: 400px;
+        height: 400px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+
+@keyframes runeRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes meteorFall {
+    0% {
+        transform: translateY(-100px) rotate(45deg);
+        opacity: 0;
+    }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% {
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+@keyframes fogDrift {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(30px, -20px) scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+
+@keyframes discoBallRotate {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg); }
+}
+
+@keyframes discoBeamRotate {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg); }
+}
+
+@keyframes floorSpotPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+}
+
+
+@keyframes smokeRise {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-200px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes discoPulseExpand {
+    0% {
+        width: 50px;
+        height: 50px;
+        opacity: 1;
+    }
+    100% {
+        width: 500px;
+        height: 500px;
+        opacity: 0;
+    }
+}
+
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+    .disco-ball {
+        width: 60px;
+        height: 60px;
+    }
+
+    .magic-circle {
+        width: 80px;
+        height: 80px;
+    }
+
+    .disco-beam {
+        width: 8px;
+    }
+
+    .disco-floor-spot {
+        width: 40px;
+        height: 40px;
+    }
+}
