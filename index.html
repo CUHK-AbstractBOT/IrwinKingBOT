@@ -6,76 +6,138 @@
     <title>Irwin King Bot</title>
     <link rel="icon" type="image/png" href="icon.png">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            background-color: #f0f0f0; /* Fallback background color */
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 2vh 2vw;
+        }
+        
         #bg1 {
-            display: block;
-            width: auto;
+            width: 100%;
+            max-width: 800px;
             height: auto;
-            object-fit: contain;
-            margin: 0 auto; /* Center the image horizontally */
+            margin: 0 auto;
+            display: block;
         }
+        
         .dialog-box {
             text-align: center;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
+            padding: 2vh 2vw;
+            margin: 2vh 0;
         }
+        
+        h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 2vh;
+        }
+        
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1vw;
+        }
+        
         #userInput {
-            padding: 10px;
-            font-size: 18px;
-            width: 300px;
+            padding: 1vh 1vw;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            width: min(60vw, 400px);
             border: 2px solid #333;
             border-radius: 5px;
             outline: none;
         }
+        
         #userInput:focus {
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
+        
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin-left: 10px;
+            padding: 1vh 2vw;
+            font-size: clamp(1rem, 2vw, 1.2rem);
             cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
         }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .floating-container {
+            position: relative;
+            flex-grow: 1;
+            margin-top: 2vh;
+        }
+        
         #bg2 {
             position: absolute;
+            width: clamp(80px, 15vw, 150px);
+            height: auto;
             transition: all 0.1s linear;
             z-index: 2;
         }
+        
         #response {
             position: absolute;
             background-color: white;
-            padding: 10px;
+            padding: 1vh 1vw;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
             color: #333;
             z-index: 3;
-            max-width: 200px;
+            max-width: min(40vw, 250px);
             text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+                gap: 2vh;
+            }
+            
+            #userInput {
+                width: 80vw;
+            }
         }
     </style>
 </head>
 <body>
-    <div>
-        <img id="bg1" src="bg1.png" alt="Top Background Image">
-    </div>
-    <div class="dialog-box">
-        <h1>Irwin King Bot</h1>
-        <input type="text" id="userInput" placeholder="Ask Professor King anything!">
-        <button onclick="thinkResponse()">Submit</button>
-    </div>
-    <div>
-        <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
-            <img id="bg2" src="bg2.png" alt="Floating Image">
-        </a>
-        <div id="response"></div>
+    <div class="container">
+        <div>
+            <img id="bg1" src="bg1.png" alt="Top Background Image">
+        </div>
+        <div class="dialog-box">
+            <h1>Irwin King Bot</h1>
+            <div class="input-group">
+                <input type="text" id="userInput" placeholder="Ask Professor King anything!">
+                <button onclick="thinkResponse()">Submit</button>
+            </div>
+        </div>
+        <div class="floating-container">
+            <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
+                <img id="bg2" src="bg2.png" alt="Floating Image">
+            </a>
+            <div id="response"></div>
+        </div>
     </div>
     <script>
         function thinkResponse() {
@@ -100,38 +162,47 @@
         const responseDiv = document.getElementById('response');
         let velocityX = (Math.random() - 0.5) * 4; // Random initial velocity (-2 to 2 pixels/frame)
         let velocityY = (Math.random() - 0.5) * 4;
-        let posX = Math.random() * (window.innerWidth - bg2.width);
-        let posY = Math.random() * (window.innerHeight - bg2.height);
+        
+        // Wait for image to load to get its dimensions
+        bg2.onload = function() {
+            let posX = Math.random() * (window.innerWidth - bg2.offsetWidth);
+            let posY = Math.random() * (window.innerHeight - bg2.offsetHeight);
 
-        function moveImage() {
-            // Update position
-            posX += velocityX;
-            posY += velocityY;
+            function moveImage() {
+                // Update position
+                posX += velocityX;
+                posY += velocityY;
 
-            // Bounce off boundaries
-            if (posX <= 0 || posX >= window.innerWidth - bg2.width) {
-                velocityX = -velocityX;
-                posX = Math.max(0, Math.min(posX, window.innerWidth - bg2.width));
+                // Bounce off boundaries
+                if (posX <= 0 || posX >= window.innerWidth - bg2.offsetWidth) {
+                    velocityX = -velocityX;
+                    posX = Math.max(0, Math.min(posX, window.innerWidth - bg2.offsetWidth));
+                }
+                if (posY <= 0 || posY >= window.innerHeight - bg2.offsetHeight) {
+                    velocityY = -velocityY;
+                    posY = Math.max(0, Math.min(posY, window.innerHeight - bg2.offsetHeight));
+                }
+
+                // Apply new position to bg2
+                bg2.style.left = `${posX}px`;
+                bg2.style.top = `${posY}px`;
+
+                // Position response div below bg2
+                responseDiv.style.left = `${posX}px`;
+                responseDiv.style.top = `${posY + bg2.offsetHeight + 10}px`;
+
+                // Continue animation
+                requestAnimationFrame(moveImage);
             }
-            if (posY <= 0 || posY >= window.innerHeight - bg2.height) {
-                velocityY = -velocityY;
-                posY = Math.max(0, Math.min(posY, window.innerHeight - bg2.height));
-            }
 
-            // Apply new position to bg2
-            bg2.style.left = `${posX}px`;
-            bg2.style.top = `${posY}px`;
-
-            // Position response div below bg2
-            responseDiv.style.left = `${posX}px`;
-            responseDiv.style.top = `${posY + bg2.height + 10}px`;
-
-            // Continue animation
-            requestAnimationFrame(moveImage);
+            // Start animation
+            moveImage();
+        };
+        
+        // If image is already loaded (cached)
+        if (bg2.complete) {
+            bg2.onload();
         }
-
-        // Start animation
-        moveImage();
     </script>
 </body>
 </html>
