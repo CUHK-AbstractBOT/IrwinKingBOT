@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irwin King Bot</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #f0f0f0; /* Fallback background color */
+        }
+        #bg1 {
+            display: block;
+            width: 1904px;
+            height: 484px;
+            object-fit: contain;
+        }
+        .dialog-box {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        #userInput {
+            padding: 10px;
+            font-size: 18px;
+            width: 300px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            outline: none;
+        }
+        #userInput:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        #bg2 {
+            position: absolute;
+            transition: all 0.1s linear;
+            z-index: 2;
+        }
+        #response {
+            position: absolute;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            z-index: 3;
+            max-width: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img id="bg1" src="bg1.png" alt="Top Background Image">
+    </div>
+    <div class="dialog-box">
+        <h1>Irwin King Bot</h1>
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button onclick="thinkResponse()">Submit</button>
+    </div>
+    <div>
+        <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
+            <img id="bg2" src="bg2.png" alt="Floating Image">
+        </a>
+        <div id="response"></div>
+    </div>
+    <script>
+        function thinkResponse() {
+            const inputText = document.getElementById('userInput').value;
+            const responseDiv = document.getElementById('response');
+            const waitSeconds = Math.random() * 4 + 1; // Random wait time between 1 and 5 seconds
+
+            // Display thinking message
+            responseDiv.innerHTML = 'Thinking......';
+
+            // Simulate delay
+            setTimeout(() => {
+                const response = inputText.toLowerCase().includes('it depends')
+                    ? `Thought for ${waitSeconds.toFixed(2)} seconds<br>Depends on what?`
+                    : `Thought for ${waitSeconds.toFixed(2)} seconds<br>It depends.`;
+                responseDiv.innerHTML = response;
+            }, waitSeconds * 1000);
+        }
+
+        // Continuous floating effect for bg2 image and response
+        const bg2 = document.getElementById('bg2');
+        const responseDiv = document.getElementById('response');
+        let velocityX = (Math.random() - 0.5) * 4; // Random initial velocity (-2 to 2 pixels/frame)
+        let velocityY = (Math.random() - 0.5) * 4;
+        let posX = Math.random() * (window.innerWidth - bg2.width);
+        let posY = Math.random() * (window.innerHeight - bg2.height);
+
+        function moveImage() {
+            // Update position
+            posX += velocityX;
+            posY += velocityY;
+
+            // Bounce off boundaries
+            if (posX <= 0 || posX >= window.innerWidth - bg2.width) {
+                velocityX = -velocityX;
+                posX = Math.max(0, Math.min(posX, window.innerWidth - bg2.width));
+            }
+            if (posY <= 0 || posY >= window.innerHeight - bg2.height) {
+                velocityY = -velocityY;
+                posY = Math.max(0, Math.min(posY, window.innerHeight - bg2.height));
+            }
+
+            // Apply new position to bg2
+            bg2.style.left = `${posX}px`;
+            bg2.style.top = `${posY}px`;
+
+            // Position response div below bg2
+            responseDiv.style.left = `${posX}px`;
+            responseDiv.style.top = `${posY + bg2.height + 10}px`;
+
+            // Continue animation
+            requestAnimationFrame(moveImage);
+        }
+
+        // Start animation
+        moveImage();
+    </script>
+</body>
+</html>
