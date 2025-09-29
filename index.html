@@ -8,10 +8,12 @@
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            overflow: hidden;
+            overflow: hidden; /* 移除滚动条 */
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
             height: 100vh;
@@ -20,30 +22,24 @@
             flex-direction: column;
         }
         
-        .container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 2vh 2vw;
-        }
-        
         #bg1 {
             width: 100%;
             max-width: 800px;
             height: auto;
             margin: 0 auto;
             display: block;
+            padding: 10px;
         }
         
         .dialog-box {
             text-align: center;
-            padding: 2vh 2vw;
-            margin: 2vh 0;
+            padding: 10px 20px;
+            margin: 10px 0;
         }
         
         h1 {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 2vh;
+            margin-bottom: 15px;
         }
         
         .input-group {
@@ -51,11 +47,11 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1vw;
+            gap: 10px;
         }
         
         #userInput {
-            padding: 1vh 1vw;
+            padding: 10px 15px;
             font-size: clamp(1rem, 2vw, 1.2rem);
             width: min(60vw, 400px);
             border: 2px solid #333;
@@ -69,7 +65,7 @@
         }
         
         button {
-            padding: 1vh 2vw;
+            padding: 10px 20px;
             font-size: clamp(1rem, 2vw, 1.2rem);
             cursor: pointer;
             background-color: #007bff;
@@ -85,7 +81,8 @@
         .floating-container {
             position: relative;
             flex-grow: 1;
-            margin-top: 2vh;
+            margin: 10px;
+            overflow: hidden; /* 确保内容不会溢出 */
         }
         
         #bg2 {
@@ -99,7 +96,7 @@
         #response {
             position: absolute;
             background-color: white;
-            padding: 1vh 1vw;
+            padding: 8px 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: clamp(0.8rem, 1.5vw, 1rem);
@@ -113,7 +110,7 @@
         @media (max-width: 768px) {
             .input-group {
                 flex-direction: column;
-                gap: 2vh;
+                gap: 15px;
             }
             
             #userInput {
@@ -123,23 +120,21 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div>
-            <img id="bg1" src="bg1.png" alt="Top Background Image">
+    <div>
+        <img id="bg1" src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Top Background Image">
+    </div>
+    <div class="dialog-box">
+        <h1>Irwin King Bot</h1>
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="Ask Professor King anything!">
+            <button onclick="thinkResponse()">Submit</button>
         </div>
-        <div class="dialog-box">
-            <h1>Irwin King Bot</h1>
-            <div class="input-group">
-                <input type="text" id="userInput" placeholder="Ask Professor King anything!">
-                <button onclick="thinkResponse()">Submit</button>
-            </div>
-        </div>
-        <div class="floating-container">
-            <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
-                <img id="bg2" src="bg2.png" alt="Floating Image">
-            </a>
-            <div id="response"></div>
-        </div>
+    </div>
+    <div class="floating-container">
+        <a href="https://www.cse.cuhk.edu.hk/irwin.king/home" target="_blank">
+            <img id="bg2" src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Floating Image">
+        </a>
+        <div id="response"></div>
     </div>
     <script>
         function thinkResponse() {
@@ -162,49 +157,75 @@
         // Continuous floating effect for bg2 image and response
         const bg2 = document.getElementById('bg2');
         const responseDiv = document.getElementById('response');
-        let velocityX = (Math.random() - 0.5) * 4; // Random initial velocity (-2 to 2 pixels/frame)
-        let velocityY = (Math.random() - 0.5) * 4;
+        const container = document.querySelector('.floating-container');
         
-        // Wait for image to load to get its dimensions
-        bg2.onload = function() {
-            let posX = Math.random() * (window.innerWidth - bg2.offsetWidth);
-            let posY = Math.random() * (window.innerHeight - bg2.offsetHeight);
-
+        // 初始速度和位置
+        let velocityX = (Math.random() - 0.5) * 2; // 减小速度范围
+        let velocityY = (Math.random() - 0.5) * 2;
+        
+        // 等待图像加载完成
+        function initAnimation() {
+            const containerRect = container.getBoundingClientRect();
+            const imgWidth = bg2.offsetWidth;
+            const imgHeight = bg2.offsetHeight;
+            
+            // 初始位置 - 确保在容器内
+            let posX = Math.random() * (containerRect.width - imgWidth);
+            let posY = Math.random() * (containerRect.height - imgHeight);
+            
             function moveImage() {
-                // Update position
+                // 更新位置
                 posX += velocityX;
                 posY += velocityY;
-
-                // Bounce off boundaries
-                if (posX <= 0 || posX >= window.innerWidth - bg2.offsetWidth) {
-                    velocityX = -velocityX;
-                    posX = Math.max(0, Math.min(posX, window.innerWidth - bg2.offsetWidth));
+                
+                // 获取当前容器尺寸
+                const currentContainerRect = container.getBoundingClientRect();
+                
+                // 边界检测 - 使用容器边界
+                if (posX <= 0) {
+                    velocityX = Math.abs(velocityX);
+                    posX = 0;
+                } else if (posX >= currentContainerRect.width - imgWidth) {
+                    velocityX = -Math.abs(velocityX);
+                    posX = currentContainerRect.width - imgWidth;
                 }
-                if (posY <= 0 || posY >= window.innerHeight - bg2.offsetHeight) {
-                    velocityY = -velocityY;
-                    posY = Math.max(0, Math.min(posY, window.innerHeight - bg2.offsetHeight));
+                
+                if (posY <= 0) {
+                    velocityY = Math.abs(velocityY);
+                    posY = 0;
+                } else if (posY >= currentContainerRect.height - imgHeight) {
+                    velocityY = -Math.abs(velocityY);
+                    posY = currentContainerRect.height - imgHeight;
                 }
-
-                // Apply new position to bg2
+                
+                // 应用新位置
                 bg2.style.left = `${posX}px`;
                 bg2.style.top = `${posY}px`;
-
-                // Position response div below bg2
+                
+                // 定位响应框在图像下方
                 responseDiv.style.left = `${posX}px`;
-                responseDiv.style.top = `${posY + bg2.offsetHeight + 10}px`;
-
-                // Continue animation
+                responseDiv.style.top = `${posY + imgHeight + 5}px`;
+                
+                // 继续动画
                 requestAnimationFrame(moveImage);
             }
-
-            // Start animation
+            
+            // 开始动画
             moveImage();
-        };
-        
-        // If image is already loaded (cached)
-        if (bg2.complete) {
-            bg2.onload();
         }
+        
+        // 如果图像已加载，直接初始化
+        if (bg2.complete) {
+            initAnimation();
+        } else {
+            // 否则等待加载完成
+            bg2.addEventListener('load', initAnimation);
+        }
+        
+        // 窗口大小变化时重新计算边界
+        window.addEventListener('resize', function() {
+            // 这里不需要额外处理，因为动画循环中会重新获取容器尺寸
+        });
     </script>
 </body>
 </html>
